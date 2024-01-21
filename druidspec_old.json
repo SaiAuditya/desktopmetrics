@@ -1,0 +1,41 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "desktopstream",
+      "metricsSpec": [],
+      "granularitySpec": {
+
+      },
+      "dimensionsSpec": {
+        "dimensions": ["guid", "user", "machine", "version", "event_type", "process", "title"],
+        "dimensionExclusions": ["current_utc_time"]
+      },
+      "timestampSpec": {
+        "column": "current_utc_time",
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSS"
+      }
+    },
+    "ioConfig": {
+      "type": "index",
+      "inputSource": {
+        "type": "local",
+        "baseDir": "/opt/shared",
+        "filter": "*.json"
+      },
+      "inputFormat": {
+        "type": "json"
+
+      }
+    },
+    "tuningConfig": {
+      "type": "index",
+      "maxRowsPerSegment": 1000000,
+      "indexSpec": {
+        "bitmap": {
+          "type": "roaring"
+        }
+      }
+    }
+  }
+}

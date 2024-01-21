@@ -1,0 +1,12 @@
+{
+  "ingestUrl": "http://localhost:3003/api/druid/metric-ingest",
+  "maskRules": {
+    "ssnRule": "",
+    "creditCardRule": ""
+  },
+  "logSize": 104857600,
+  "logBackUp": 3,
+  "optionalUserName": "auditya",
+  "maskUser": "False",
+  "eventChunkSize": 100
+}

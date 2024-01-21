@@ -1,0 +1,18 @@
+docker run -d -e "SUPERSET_FEATURE_EMBEDDED_SUPERSET=true" -e "SUPERSET_SECRET_KEY=superset8088" -e "WTF_CSRF_ENABLED=False" -v /Users/venkatasrinadhuni/Desktop/projectai/aicharts/superset/superset_config_docker.py:/app/pythonpath/superset_config.py -p 8088:8088 --name superset apache/superset
+
+docker exec -it superset superset fab create-admin \
+              --username admin \
+              --firstname Superset \
+              --lastname Admin \
+              --email admin@superset.com \
+              --password admin
+
+docker exec -it superset superset db upgrade
+
+docker exec -it superset superset init
+
+1e06eba2-5d1a-4276-b0f8-13f747f68811
+
+
+
+

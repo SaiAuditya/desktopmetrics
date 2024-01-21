@@ -1,0 +1,53 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema":{
+      "dataSource": "desktop_activity_metrics",
+      "metricsSpec": [
+        {"type": "count", "name": "count"},
+        {"type": "longSum", "name": "duration", "fieldName": "duration"},
+        {"type": "longSum", "name": "click", "fieldName": "click"},
+        {"type": "longSum", "name": "idle", "fieldName": "idle"},
+        {"type": "longSum", "name": "keypress", "fieldName": "keypress"},
+        {"type": "longSum", "name": "errorpress", "fieldName": "errorpress"},
+        {"type": "longSum", "name": "copy", "fieldName": "copy"},
+        {"type": "longSum", "name": "paste", "fieldName": "paste"}
+      ],
+      "granularitySpec": {
+        "type": "uniform",
+        "segmentGranularity": "HOUR",
+        "queryGranularity": "NONE",
+        "rollup": false
+      },
+      "timestampSpec": {
+        "column": "current_utc_time",
+        "format": "yyyy-MM-dd HH:mm:ss.SSSSSS"
+      },
+      "dimensionsSpec": {
+        "dimensions": ["guid", "user", "machine", "version", "event_type", "process", "title","url","domain","start_time", "end_time"],
+        "dimensionExclusions": ["current_utc_time", "duration", "click", "idle", "keypress", "errorpress", "copy", "paste" ]
+      }
+    },
+    "ioConfig": {
+      "type": "index",
+      "inputSource": {
+        "type": "local",
+        "baseDir": "/opt/shared",
+        "filter": "*.json"
+      },
+      "inputFormat": {
+        "type": "json"
+
+      }
+    },
+    "tuningConfig": {
+      "type": "index",
+      "maxRowsPerSegment": 1000000,
+      "indexSpec": {
+        "bitmap": {
+          "type": "roaring"
+        }
+      }
+    }
+  }
+}
