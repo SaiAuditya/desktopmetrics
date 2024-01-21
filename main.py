@@ -413,9 +413,38 @@ class KeyboardSubject(Subject):
 def get_active_window_title():
     if platform.system() == "Windows":
         import ctypes
+        import psutil
         try:
-            active_window = gw.get_active_window()
-            process = psutil.Process(active_window.pid)
+            hwnd = ctypes.windll.user32.GetForegroundWindow()
+            # Get the length of the window title text
+            length = ctypes.windll.user32.GetWindowTextLengthW(hwnd) + 1
+
+            # Create a buffer to store the window title
+            buffer = ctypes.create_unicode_buffer(length)
+
+            # Get the window title and store it in the buffer
+            ctypes.windll.user32.GetWindowTextW(hwnd, buffer, length)
+
+            active_window = buffer.value
+            pid = ctypes.c_ulong(0)
+            ctypes.windll.user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+
+            # Open the process with PROCESS_QUERY_INFORMATION and PROCESS_VM_READ permissions
+            process_handle = ctypes.windll.kernel32.OpenProcess(0x0410, False, pid.value)
+            if process_handle == 0:
+                raise Exception(f"Failed to open process. Error code: {ctypes.windll.kernel32.GetLastError()}")
+
+            # Get the executable file name of the process
+            buffer_size = 260  # MAX_PATH
+            executable_buffer = ctypes.create_unicode_buffer(buffer_size)
+            ctypes.windll.psapi.GetModuleFileNameExW(process_handle, 0, executable_buffer, buffer_size)
+
+            # Close the process handle
+            ctypes.windll.kernel32.CloseHandle(process_handle)
+
+            # Extract the process name from the file path
+            process = executable_buffer.value.split('\\')[-1]
+            url = 'none'
 
             if "Google Chrome" in active_window or "Mozilla Firefox" in active_window or "Microsoft Edge" in active_window:
                 # Get the URL of the active browser window
@@ -428,10 +457,13 @@ def get_active_window_title():
                 # Parse the URL to extract the domain
                 parsed_url = urlparse(url)
                 domain = parsed_url.netloc
-            return f"{process.name()} --- {active_window.title}---{url}---{domain}"
+
+                return f"{process} --- {active_window.title()}---{url}---{domain}"
+            else:
+                return f"{process} --- {active_window.title()}---None---None"
 
         except Exception:
-            return "None---None"
+            return "None---None---None---None"
 
     if platform.system() == "Darwin":  # macOS
         try:
