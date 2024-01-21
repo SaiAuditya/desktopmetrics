@@ -1,9 +1,0 @@
-Exception in thread Thread-4:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/threading.py", line 1009, in _bootstrap_inner
-    self.run()
-  File "/Users/venkatasrinadhuni/PycharmProjects/MyTaskPicker/.venv/lib/python3.10/site-packages/pynput/_util/__init__.py", line 210, in run
-    self._run()
-  File "/Users/venkatasrinadhuni/PycharmProjects/MyTaskPicker/.venv/lib/python3.10/site-packages/pynput/_util/darwin.py", line 202, in _run
-    loop_source = Quartz.CFMachPortCreateRunLoopSource(
-  File "/Users/venkatasrinadhuni/PycharmProjects/MyTaskPicker/.venv/lib/python3.10/site-packages/objc/_lazyimport.py", line 178, in __getattr__
